@@ -1,0 +1,65 @@
+{
+  "name": "bpwa",
+  "version": "1.0.7",
+  "description": "pwa project solution",
+  "main": "dist/index.js",
+  "scripts": {
+    "pretest": "npm run fixtures:ensure",
+    "test": "cross-env FORCE_COLOR=1 jest --coverage",
+    "test:watch": "jest --watch",
+    "posttest": "npm run lint",
+    "lint": "fecs --ignore=./.gitignore bin src test",
+    "build": "cross-env BABEL_ENV=production rollup -c",
+    "prepublish": "npm run build",
+    "fixtures:ensure": "cross-env NODE_ENV=development babel-node ./test/helpers/setupBpwa.js",
+    "fixtures:rebuild": "cross-env NODE_ENV=development babel-node ./test/helpers/cleanupFixtures.js && npm run fixtures:ensure"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/searchfe/bpwa.git"
+  },
+  "keywords": [
+    "pwa",
+    "vue"
+  ],
+  "author": "sfe-sy<sfe-sy@baidu.com>",
+  "license": "ISC",
+  "dependencies": {
+    "ajv": "^5.1.3",
+    "babel-core": "^6.24.1",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "bpwa-config": "^1.0.2",
+    "chalk": "^1.1.3",
+    "etpl": "^3.2.0",
+    "fs-extra": "^3.0.1",
+    "glob": "^7.1.2",
+    "node-schedule": "^1.2.2",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1",
+    "simple-git": "^1.73.0",
+    "tar.gz": "^1.0.5"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.0",
+    "babel-eslint": "^7.2.1",
+    "babel-jest": "^19.0.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.3.2",
+    "babel-preset-latest": "^6.24.1",
+    "clone": "^2.1.1",
+    "cross-env": "^4.0.0",
+    "fecs": "^1.3.1",
+    "jest": "^19.0.2",
+    "rimraf": "^2.6.1",
+    "rollup": "^0.41.6",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "sinon": "^2.1.0",
+    "stream-buffers": "^3.0.1",
+    "temp": "^0.8.3",
+    "wrap-ansi": "^2.1.0"
+  }
+}
