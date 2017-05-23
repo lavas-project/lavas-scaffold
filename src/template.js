@@ -6,7 +6,6 @@
 
 import conf from './config';
 import gData from './data';
-import store from './store';
 
 import git from 'simple-git';
 import glob from 'glob';
@@ -37,17 +36,17 @@ function downloadFromGit(repo, targetPath) {
 }
 
 
-
 /**
  * 渲染 template 里面的所有文件
  *
- * @param  {Object} fields 收集的用户输入字段
- * @return {Promise}       渲染 promise
+ * @param  {Object} fields    收集的用户输入字段
+ * @param  {Object} template  template 对象
+ * @return {Promise}          渲染 promise
  */
-function renderTemplate(fields) {
+function renderTemplate(fields, template) {
+
     const dirPath = fields.dirPath;
     const ltd = conf.LOCAL_TEMPLATES_DIR;
-    const data = store.get('data') || {};
 
     return new Promise((resolve, reject) => {
         glob(
@@ -56,27 +55,33 @@ function renderTemplate(fields) {
                 cwd: ltd,
                 ignore: [
                     'node_modules',
-                    '*.tmp', '*.log', '*.png', '*.jpg', '*.jpeg',
-                    '*.svg', '*.woff', '*.ttf', '*.bmp', '.gif'
-                ].concat(data.ignores || [])
+                    '**/*.tmp', '**/*.log',
+                    '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.bmp', '**/*.gif', '**/*.ico',
+                    '**/*.svg', '**/*.woff', '**/*.ttf'
+                ].concat(template.renderIgnores || [])
             },
             (err, files) => {
                 files.forEach(file => {
+
                     const filePath = path.resolve(ltd, file);
-                    const fileCon = fs.readFileSync(filePath, 'utf8');
 
-                    // 这里可以直接通过外界配置的规则，重新计算出一份数据，只要和 template 里面的字段对应上就好了。
-                    const dfDataTpls = data.defaultData || {};
-                    const dfData = {};
+                    if (fs.statSync(filePath).isFile()) {
 
-                    Object.keys(dfDataTpls).forEach(key => {
-                        dfData[key] = etpl.render(dfDataTpls[key], fields);
-                    });
+                        const fileCon = fs.readFileSync(filePath, 'utf8');
 
-                    let renderData = Object.assign({}, fields, dfData);
+                        // 这里可以直接通过外界配置的规则，重新计算出一份数据，只要和 template 里面的字段对应上就好了。
+                        const extDataTpls = template.extData || {};
+                        const extData = {};
 
-                    const afterCon = etpl.render(fileCon, renderData);
-                    fs.writeFileSync(filePath, afterCon);
+                        Object.keys(extDataTpls).forEach(key => {
+                            extData[key] = etpl.compile('' + extDataTpls[key])(fields);
+                        });
+
+                        const renderData = Object.assign({}, fields, extData);
+
+                        const afterCon = etpl.compile(fileCon)(renderData);
+                        fs.writeFileSync(filePath, afterCon);
+                    }
 
                 });
 
@@ -113,6 +118,8 @@ export default {
         let data = await gData();
         let fwobj = {};
 
+        // 这里说明一下， 没办法做到完全解耦， 必须传入 fields.framework 字段，也就是必须得指定一个 framework
+        // 在 GLOBAL_CONF_URL 对应的必须得有 framework 这个 property，否则 run 不起来
         for (let framework of data.templates) {
             if (framework.value === fields.framework) {
                 fwobj = framework;
@@ -130,7 +137,7 @@ export default {
 
             // 把 .git 文件夹删掉
             fs.removeSync(path.resolve(ltd, '.git'));
-            await renderTemplate(fields);
+            await renderTemplate(fields, fwobj);
         }
         catch (e) {
             throw new Error('下载模版失败，请检查当前网络环境是否正常');

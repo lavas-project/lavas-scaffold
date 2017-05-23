@@ -8,7 +8,6 @@ import path from 'path';
 
 import bpwaSchema from './src/schema';
 import bpwaProject from './src/project';
-import bpwaShell from './src/appShell';
 import bpwaTemplate from './src/template';
 
 
@@ -60,18 +59,6 @@ export default {
     getTemplates: async function () {
         let templates = await bpwaTemplate.getTemplates();
         return templates;
-    },
-
-
-    /**
-     * 通过 framework 获取当前的 framework 的 appShell
-     *
-     * @param  {string} template 框架的 value
-     * @return {Promise}          resolve shells
-     */
-    getAppShells: async function (template) {
-        let shells = await bpwaShell.getAppShells(template);
-        return shells;
     }
 
 };

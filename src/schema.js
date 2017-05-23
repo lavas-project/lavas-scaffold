@@ -31,10 +31,6 @@ export default {
                 if (item.link && !item.dependence) {
                     properties[key].list = data[item.link];
                 }
-
-                if (item.dependence) {
-                    properties[key].list = [];
-                }
             }
         }
 

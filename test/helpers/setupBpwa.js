@@ -5,23 +5,26 @@
 
 
 import bpwa from '../../index';
+import path from 'path';
 
 
 async function setupBpwa() {
-    // const schema = await bpwa.getSchema();
+    const schema = await bpwa.getSchema();
 
-    // console.log(schema);
+    console.log(schema.properties.framework.list[0].appShellList);
 
 
-    const ret = await bpwa.exportProject({
-        name: 'xxxx',
-        dirPath: __dirname,
-        isSsr: false,
-        appShell: 'aa',
-        framework: 'vue'
-    });
+    // const ret = await bpwa.exportProject({
+    //     name: 'xxxx',
+    //     dirPath: path.resolve(__dirname, '..', '..', '..'),
+    //     isSsr: false,
+    //     appShell: 'aa',
+    //     framework: 'vue',
+    //     author: 'zoumiaojiang',
+    //     email: 'zoumiaojiang@gmail.com'
+    // });
 
-    console.log(ret);
+    // console.log(ret);
 //
     // bpwa.checkUpdate();
 }
