@@ -18,7 +18,7 @@ export default (async function () {
 
     let data = store.get('data');
 
-    // 如果 store 中已经存在了，那 5s 后我们再去尝试更新一下是不是有最新的数据
+    // 如果 store 中已经存在了，那 2s 后我们再去尝试更新一下是不是有最新的数据
     if (data) {
         let timer = setTimeout(() => {
             requestP.get({
@@ -28,7 +28,7 @@ export default (async function () {
                 store.set('data', json);
                 clearTimeout(timer);
             });
-        }, 5000);
+        }, 2000);
 
         return data;
     }
