@@ -24,11 +24,17 @@ export default {
      */
     exportProject: async function (fields) {
 
-        const projName = fields.name || 'pwa-project';
-        const targetDir = path.resolve(fields.dirPath || '/tmp', projName);
+        const schema = await this.getSchema();
+        const defaultFields = {};
 
-        fields.dirPath = targetDir;
-        fields.name = projName;
+        Object.keys(schema.properties).forEach(key => {
+            defaultFields[key] = schema.properties[key].default;
+        });
+
+        fields = Object.assign({}, defaultFields, fields);
+
+        fields.name = fields.name || 'pwa-project';
+        fields.dirPath = path.resolve(process.cwd(), fields.dirPath || '', fields.name);
 
         const errors = await bpwaProject.exports(fields);
 
@@ -36,7 +42,7 @@ export default {
             return {errors};
         }
 
-        return projName;
+        return fields.name;
     },
 
 

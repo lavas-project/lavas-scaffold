@@ -48,6 +48,13 @@ function renderTemplate(fields, template) {
     const dirPath = fields.dirPath;
     const ltd = conf.LOCAL_TEMPLATES_DIR;
 
+    let etplCompile = new etpl.Engine(template.etpl || {
+        commandOpen: '{%',
+        commandClose: '%}',
+        variableOpen: '${=',
+        variableClose: '=}'
+    });
+
     return new Promise((resolve, reject) => {
         glob(
             '**/*',
@@ -74,12 +81,12 @@ function renderTemplate(fields, template) {
                         const extData = {};
 
                         Object.keys(extDataTpls).forEach(key => {
-                            extData[key] = etpl.compile('' + extDataTpls[key])(fields);
+                            extData[key] = etplCompile.compile('' + extDataTpls[key])(fields);
                         });
 
                         const renderData = Object.assign({}, fields, extData);
 
-                        const afterCon = etpl.compile(fileCon)(renderData);
+                        const afterCon = etplCompile.compile(fileCon)(renderData);
                         fs.writeFileSync(filePath, afterCon);
                     }
 
@@ -135,8 +142,17 @@ export default {
             }
             await downloadFromGit(gitRepo, ltd);
 
-            // 把 .git 文件夹删掉
-            fs.removeSync(path.resolve(ltd, '.git'));
+            // 把指定的文件和文件夹都删掉
+            (fwobj.exportsIgnores || [
+                '.git',
+                'docs'
+            ]).forEach(fileOrDir => {
+                const filePath = path.resolve(ltd, fileOrDir);
+                if (fs.existsSync(filePath)) {
+                    fs.removeSync(filePath);
+                }
+            });
+
             await renderTemplate(fields, fwobj);
         }
         catch (e) {

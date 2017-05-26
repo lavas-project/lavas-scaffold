@@ -25,7 +25,6 @@ export default {
         for (let key of keys) {
             const item = properties[key];
 
-            // @todo: 从真实的template项目和 gData 中拿数据
             if (item.type === 'list') {
 
                 if (item.link && !item.dependence) {
