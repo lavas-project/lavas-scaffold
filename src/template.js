@@ -96,8 +96,9 @@ function renderTemplate(fields, ltd, template, isStream) {
                 if (isStream) {
 
                     const zip = new Zip();
-                    zip.addLocalFolder(ltd);
+                    zip.addLocalFolder(ltd, fields.name);
                     zip.toBuffer(buffer => resolve(buffer));
+                    // zip.writeZip(path.resolve(ltd, '../files.zip'));
                     // console.log(fs.createReadStream(ltd));
                 }
                 else {
