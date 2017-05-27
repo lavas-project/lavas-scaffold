@@ -42,7 +42,7 @@ export default {
      *
      * @param  {Object} fields 参数
      * @param  {Object} isStream 是否需要取得流
-     * @return {Promise}       resolve 工程名
+     * @return {Promise}       resolve 工程所在路径/工程的 zip buffer
      */
     exportProject: async function (fields, isStream) {
         fields = await getFields(fields);
