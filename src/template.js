@@ -23,12 +23,28 @@ import archiver from 'archiver';
  * @return {Promise}           promise 对象
  */
 function downloadFromGit(repo, targetPath) {
-
     return new Promise((resolve, reject) => {
         try {
-            git().clone(repo, targetPath, {}, () => {
+            if (fs.existsSync(targetPath)) {
+                const tmpTarget = path.resolve(targetPath, '..', '__tmp');
+                if (fs.existsSync(tmpTarget)) {
+                    fs.removeSync(tmpTarget);
+                }
+
+                setTimeout(() => {
+                    git().clone(repo, tmpTarget, {}, () => {
+                        fs.removeSync(targetPath);
+                        fs.copySync(tmpTarget, targetPath);
+                        fs.removeSync(tmpTarget);
+                    });
+                });
                 resolve(targetPath);
-            });
+            }
+            else {
+                git().clone(repo, targetPath, {}, () => {
+                    resolve(targetPath);
+                });
+            }
         }
         catch (e) {
             reject('模版下载失败');
@@ -152,13 +168,19 @@ export default {
 
         const gitRepo = fwobj.git;
         const ltd = path.resolve(conf.LOCAL_TEMPLATES_DIR, `${Date.now()}`);
+        const tltd = path.resolve(conf.LOCAL_TEMPLATES_DIR, 'templates');
 
         try {
             if (fs.existsSync(ltd)) {
                 fs.removeSync(ltd);
             }
+            if (!fs.existsSync(tltd)) {
+                fs.mkdirsSync(tltd);
+            }
+
             fs.mkdirsSync(ltd);
-            await downloadFromGit(gitRepo, ltd);
+            await downloadFromGit(gitRepo, tltd);
+            fs.copySync(tltd, ltd);
 
             // 把指定的文件和文件夹都删掉
             (fwobj.exportsIgnores || [

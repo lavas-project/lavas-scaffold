@@ -4,7 +4,7 @@
  */
 
 
-import bpwaSchema  from './schema';
+import bpwaSchema from './schema';
 import bpwaTemplate from './template';
 import log from './log';
 import Ajv from 'ajv';
