@@ -10,9 +10,10 @@ import gData from './data';
 import git from 'simple-git';
 import glob from 'glob';
 import etpl from 'etpl';
-import Zip from 'adm-zip';
 import fs from 'fs-extra';
 import path from 'path';
+
+import archiver from 'archiver';
 
 /**
  * 从git上downloa代码下来
@@ -70,11 +71,8 @@ function renderTemplate(fields, ltd, template, isStream) {
             },
             (err, files) => {
                 files.forEach(file => {
-
                     const filePath = path.resolve(ltd, file);
-
                     if (fs.statSync(filePath).isFile()) {
-
                         const fileCon = fs.readFileSync(filePath, 'utf8');
 
                         // 这里可以直接通过外界配置的规则，重新计算出一份数据，只要和 template 里面的字段对应上就好了。
@@ -90,16 +88,22 @@ function renderTemplate(fields, ltd, template, isStream) {
                         const afterCon = etplCompile.compile(fileCon)(renderData);
                         fs.writeFileSync(filePath, afterCon);
                     }
-
                 });
 
                 if (isStream) {
-
-                    const zip = new Zip();
-                    zip.addLocalFolder(ltd, fields.name);
-                    zip.toBuffer(buffer => resolve(buffer));
-                    // zip.writeZip(path.resolve(ltd, '../files.zip'));
-                    // console.log(fs.createReadStream(ltd));
+                    const archive = archiver('zip', {
+                        zlib: {level: 9} // Sets the compression level.
+                    });
+                    const tmpZipPath = path.resolve(ltd, 'tmp.zip');
+                    const output = fs.createWriteStream(tmpZipPath);
+                    archive.pipe(output);
+                    archive.directory(ltd, fields.name);
+                    archive.finalize().on('finish', () => {
+                        const zipCon = fs.createReadStream(tmpZipPath);
+                        zipCon.on('data', data => {
+                            resolve(data);
+                        });
+                    });
                 }
                 else {
                     fs.copySync(ltd, dirPath);
