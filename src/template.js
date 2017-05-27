@@ -10,7 +10,7 @@ import gData from './data';
 import git from 'simple-git';
 import glob from 'glob';
 import etpl from 'etpl';
-
+import Zip from 'adm-zip';
 import fs from 'fs-extra';
 import path from 'path';
 
@@ -40,19 +40,20 @@ function downloadFromGit(repo, targetPath) {
  * 渲染 template 里面的所有文件
  *
  * @param  {Object} fields    收集的用户输入字段
+ * @param  {string} ltd       临时文件夹存储路径
  * @param  {Object} template  template 对象
+ * @param  {boolean} isStream  导出的是否为流
  * @return {Promise}          渲染 promise
  */
-function renderTemplate(fields, template) {
+function renderTemplate(fields, ltd, template, isStream) {
 
     const dirPath = fields.dirPath;
-    const ltd = conf.LOCAL_TEMPLATES_DIR;
 
     let etplCompile = new etpl.Engine(template.etpl || {
         commandOpen: '{%',
         commandClose: '%}',
-        variableOpen: '${=',
-        variableClose: '=}'
+        variableOpen: '*__',
+        variableClose: '__*'
     });
 
     return new Promise((resolve, reject) => {
@@ -92,8 +93,17 @@ function renderTemplate(fields, template) {
 
                 });
 
-                fs.copySync(conf.LOCAL_TEMPLATES_DIR, dirPath);
-                resolve();
+                if (isStream) {
+
+                    const zip = new Zip();
+                    zip.addLocalFolder(ltd);
+                    zip.toBuffer(buffer => resolve(buffer));
+                    // console.log(fs.createReadStream(ltd));
+                }
+                else {
+                    fs.copySync(ltd, dirPath);
+                    resolve(dirPath);
+                }
             }
         );
     });
@@ -118,9 +128,11 @@ export default {
     /**
      * 导出某一个模版
      *
-     * @param  {Object} fields 导出模版所需字段
+     * @param {Object} fields  导出模版所需字段
+     * @param {boolean} isStream  导出的是否为流
+     * @return {any}              导出的结果
      */
-    exportTemplate: async function (fields) {
+    exportsTemplate: async function (fields, isStream) {
 
         let data = await gData();
         let fwobj = {};
@@ -134,12 +146,13 @@ export default {
         }
 
         const gitRepo = fwobj.git;
-        const ltd = conf.LOCAL_TEMPLATES_DIR;
+        const ltd = path.resolve(conf.LOCAL_TEMPLATES_DIR, `${Date.now()}`);
 
         try {
             if (fs.existsSync(ltd)) {
                 fs.removeSync(ltd);
             }
+            fs.mkdirsSync(ltd);
             await downloadFromGit(gitRepo, ltd);
 
             // 把指定的文件和文件夹都删掉
@@ -153,7 +166,10 @@ export default {
                 }
             });
 
-            await renderTemplate(fields, fwobj);
+            const renderResult = await renderTemplate(fields, ltd, fwobj, isStream);
+            fs.removeSync(ltd);
+
+            return renderResult;
         }
         catch (e) {
             throw new Error('下载模版失败，请检查当前网络环境是否正常');

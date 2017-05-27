@@ -11,6 +11,27 @@ import bpwaProject from './src/project';
 import bpwaTemplate from './src/template';
 
 
+/**
+ * 获取导出的keyong fields
+ *
+ * @param  {Object} fields  传入的 fields
+ * @return {Object}         输出的 fields
+ */
+async function getFields(fields) {
+    const schema = await bpwaSchema.getSchema();
+    const defaultFields = {};
+
+    Object.keys(schema.properties).forEach(key => {
+        defaultFields[key] = schema.properties[key].default;
+    });
+
+    fields = Object.assign({}, defaultFields, fields);
+
+    fields.name = fields.name || 'pwa-project';
+    fields.dirPath = path.resolve(process.cwd(), fields.dirPath || '', fields.name);
+
+    return fields;
+}
 
 
 /* eslint-disable fecs-use-method-definition */
@@ -20,29 +41,18 @@ export default {
      * 导出 pwa 脚手架工程
      *
      * @param  {Object} fields 参数
+     * @param  {Object} isStream 是否需要取得流
      * @return {Promise}       resolve 工程名
      */
-    exportProject: async function (fields) {
+    exportProject: async function (fields, isStream) {
+        fields = await getFields(fields);
+        const {err, ret} = await bpwaProject.exports(fields, isStream);
 
-        const schema = await this.getSchema();
-        const defaultFields = {};
-
-        Object.keys(schema.properties).forEach(key => {
-            defaultFields[key] = schema.properties[key].default;
-        });
-
-        fields = Object.assign({}, defaultFields, fields);
-
-        fields.name = fields.name || 'pwa-project';
-        fields.dirPath = path.resolve(process.cwd(), fields.dirPath || '', fields.name);
-
-        const errors = await bpwaProject.exports(fields);
-
-        if (errors) {
-            return {errors};
+        if (err) {
+            return err;
         }
 
-        return fields.name;
+        return ret;
     },
 
 

@@ -13,21 +13,17 @@ async function setupBpwa() {
 
     // console.log(schema.properties);
 
-    await bpwa.exportProject();
+    const ret = await bpwa.exportProject({
+        name: 'xxxx',
+        dirPath: path.resolve(__dirname, '..', '..', '..'),
+        isSsr: false,
+        appShell: 'aa',
+        framework: 'vue',
+        author: 'zoumiaojiang',
+        email: 'zoumiaojiang@gmail.com'
+    }, true);
 
-    // const ret = await bpwa.exportProject({
-    //     name: 'xxxx',
-    //     dirPath: path.resolve(__dirname, '..', '..', '..'),
-    //     isSsr: false,
-    //     appShell: 'aa',
-    //     framework: 'vue',
-    //     author: 'zoumiaojiang',
-    //     email: 'zoumiaojiang@gmail.com'
-    // });
-
-    //  console.log(ret);
-//
-    // bpwa.checkUpdate();
+    console.log(ret);
 }
 
 

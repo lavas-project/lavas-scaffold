@@ -14,7 +14,7 @@ export default {
      *
      * @type {String}
      */
-    LOCAL_TEMPLATES_DIR: path.resolve(__dirname, '../tmp/templates'),
+    LOCAL_TEMPLATES_DIR: path.resolve(__dirname, '../tmp'),
 
 
     /**
