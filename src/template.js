@@ -14,7 +14,6 @@ import fs from 'fs-extra';
 import path from 'path';
 
 import archiver from 'archiver';
-import childProcess from 'child_process';
 
 /**
  * 从git上downloa代码下来
@@ -28,13 +27,20 @@ function downloadFromGit(repo, targetPath) {
         try {
             // 如果当前文件系统有 download 的缓存，就不立即下载了。我们走后台默默更新就好了。
             if (fs.existsSync(targetPath)) {
-                const downloadProcessPath = path.resolve(__dirname, 'download.js');
                 resolve(targetPath);
 
-                childProcess.exec(`node ${downloadProcessPath}`, (err, output) => {
-                    if (!err) {
-                        console.log(output);
+                const timer = setTimeout(() => {
+                    const tmpTarget = path.resolve(targetPath, '..', '__tmp');
+                    if (fs.existsSync(tmpTarget)) {
+                        fs.removeSync(tmpTarget);
                     }
+                    git().clone(repo, tmpTarget, {}, () => {
+                        fs.removeSync(targetPath);
+                        fs.copySync(tmpTarget, targetPath);
+                        fs.removeSync(tmpTarget);
+                        clearTimeout(timer);
+                        // console.log('template update success!');
+                    });
                 });
 
             }
@@ -45,7 +51,7 @@ function downloadFromGit(repo, targetPath) {
             }
         }
         catch (e) {
-            reject('模版下载失败');
+            reject('模版下载失败，请检查您的网络环境');
         }
     });
 }
@@ -108,17 +114,12 @@ function renderTemplate(fields, ltd, template, isStream) {
                     const archive = archiver('zip', {
                         zlib: {level: 9} // Sets the compression level.
                     });
-                    const tmpZipPath = path.resolve(ltd, 'tmp.zip');
+                    const tmpZipPath = path.resolve(ltd, '..', 'tmp.zip');
                     const output = fs.createWriteStream(tmpZipPath);
                     archive.pipe(output);
                     archive.directory(ltd, fields.name);
-                    archive.finalize().on('finish', () => {
-                        const zipCon = fs.createReadStream(tmpZipPath);
-                        zipCon.on('data', data => {
-                            resolve(data);
-                            // console.log('render time: ', Date.now());
-                        });
-                    });
+
+                    archive.finalize().on('finish', () => resolve(fs.createReadStream(tmpZipPath)));
                 }
                 else {
                     fs.copySync(ltd, dirPath);
