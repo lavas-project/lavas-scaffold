@@ -14,6 +14,7 @@ import fs from 'fs-extra';
 import path from 'path';
 
 import archiver from 'archiver';
+import childProcess from 'child_process';
 
 /**
  * 从git上downloa代码下来
@@ -25,20 +26,17 @@ import archiver from 'archiver';
 function downloadFromGit(repo, targetPath) {
     return new Promise((resolve, reject) => {
         try {
+            // 如果当前文件系统有 download 的缓存，就不立即下载了。我们走后台默默更新就好了。
             if (fs.existsSync(targetPath)) {
-                const tmpTarget = path.resolve(targetPath, '..', '__tmp');
-                if (fs.existsSync(tmpTarget)) {
-                    fs.removeSync(tmpTarget);
-                }
-
-                setTimeout(() => {
-                    git().clone(repo, tmpTarget, {}, () => {
-                        fs.removeSync(targetPath);
-                        fs.copySync(tmpTarget, targetPath);
-                        fs.removeSync(tmpTarget);
-                    });
-                });
+                const downloadProcessPath = path.resolve(__dirname, 'download.js');
                 resolve(targetPath);
+
+                childProcess.exec(`node ${downloadProcessPath}`, (err, output) => {
+                    if (!err) {
+                        console.log(output);
+                    }
+                });
+
             }
             else {
                 git().clone(repo, targetPath, {}, () => {
@@ -118,6 +116,7 @@ function renderTemplate(fields, ltd, template, isStream) {
                         const zipCon = fs.createReadStream(tmpZipPath);
                         zipCon.on('data', data => {
                             resolve(data);
+                            // console.log('render time: ', Date.now());
                         });
                     });
                 }
@@ -168,7 +167,7 @@ export default {
 
         const gitRepo = fwobj.git;
         const ltd = path.resolve(conf.LOCAL_TEMPLATES_DIR, `${Date.now()}`);
-        const tltd = path.resolve(conf.LOCAL_TEMPLATES_DIR, 'templates');
+        const tltd = path.resolve(conf.LOCAL_TEMPLATES_DIR, fields.framework, 'templates');
 
         try {
             if (fs.existsSync(ltd)) {

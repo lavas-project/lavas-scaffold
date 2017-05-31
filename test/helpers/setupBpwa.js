@@ -12,7 +12,7 @@ async function setupBpwa() {
     // const schema = await bpwa.getSchema();
 
     // console.log(schema.properties);
-
+    // console.log('start time: ', Date.now());
     const ret = await bpwa.exportProject({
         name: 'xxxx',
         dirPath: path.resolve(__dirname, '..', '..', '..'),
