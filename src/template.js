@@ -45,6 +45,7 @@ function downloadFromGit(repo, targetPath) {
 
             }
             else {
+                fs.mkdirsSync(targetPath);
                 git().clone(repo, targetPath, {}, () => {
                     resolve(targetPath);
                 });
@@ -173,9 +174,6 @@ export default {
         try {
             if (fs.existsSync(ltd)) {
                 fs.removeSync(ltd);
-            }
-            if (!fs.existsSync(tltd)) {
-                fs.mkdirsSync(tltd);
             }
 
             fs.mkdirsSync(ltd);
