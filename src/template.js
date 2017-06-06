@@ -39,7 +39,6 @@ function downloadFromGit(repo, targetPath) {
                         fs.copySync(tmpTarget, targetPath);
                         fs.removeSync(tmpTarget);
                         clearTimeout(timer);
-                        // console.log('template update success!');
                     });
                 });
 
@@ -103,7 +102,6 @@ function renderTemplate(fields, ltd, template, isStream) {
                         Object.keys(extDataTpls).forEach(key => {
                             extData[key] = etplCompile.compile('' + extDataTpls[key])(fields);
                         });
-
                         const renderData = Object.assign({}, fields, extData);
 
                         const afterCon = etplCompile.compile(fileCon)(renderData);
@@ -157,19 +155,19 @@ export default {
     exportsTemplate: async function (fields, isStream) {
 
         let data = await gData();
-        let fwobj = {};
+        let fwobj;
 
         // 这里说明一下， 没办法做到完全解耦， 必须传入 fields.framework 字段，也就是必须得指定一个 framework
         // 在 GLOBAL_CONF_URL 对应的必须得有 framework 这个 property，否则 run 不起来
         for (let framework of data.templates) {
-            if (framework.value === fields.framework) {
+            if (framework.value === data.defaultFramework || framework.value === fields.framework) {
                 fwobj = framework;
             }
         }
 
         const gitRepo = fwobj.git;
         const ltd = path.resolve(conf.LOCAL_TEMPLATES_DIR, `${Date.now()}`);
-        const tltd = path.resolve(conf.LOCAL_TEMPLATES_DIR, fields.framework, 'templates');
+        const tltd = path.resolve(conf.LOCAL_TEMPLATES_DIR, fields.framework || data.defaultFramework, 'templates');
 
         try {
             if (fs.existsSync(ltd)) {
@@ -190,6 +188,9 @@ export default {
                     fs.removeSync(filePath);
                 }
             });
+
+            fields.framework = fields.framework || data.defaultFramework;
+            fields.appShell = fields.appShell || data.defaultAppShell;
 
             const renderResult = await renderTemplate(fields, ltd, fwobj, isStream);
             fs.removeSync(ltd);

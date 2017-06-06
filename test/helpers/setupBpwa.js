@@ -16,9 +16,6 @@ async function setupBpwa() {
     const ret = await bpwa.exportProject({
         name: 'xxxx',
         dirPath: path.resolve(__dirname, '..', '..', '..'),
-        isSsr: false,
-        appShell: 'aa',
-        framework: 'vue',
         author: 'zoumiaojiang',
         email: 'zoumiaojiang@gmail.com'
     }, true);

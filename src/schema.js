@@ -18,7 +18,14 @@ export default {
     getSchema: async function () {
 
         let data = await gData();
-        let properties = data.properties;
+        let schemas = data.schemas;
+        let properties = {};
+
+        Object.keys(schemas).forEach(key => {
+            if (!schemas[key].disable) {
+                properties[key] = schemas[key];
+            }
+        });
 
         const keys = Object.keys(properties);
 
