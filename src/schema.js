@@ -51,8 +51,32 @@ export default {
      */
     getJsonSchema: async function () {
         let data = await gData();
+        let schemas = data.schemas;
+        let properties = {};
+        let required = [];
+        let dependence = {};
 
-        return data.jsonSchema;
+        Object.keys(schemas).forEach(key => {
+            let item = schemas[key];
+            if (!item.disable) {
+                properties[key] = {
+                    type: item.jsonType || item.type,
+                    description: item.description
+                };
+
+                if (item.required) {
+                    required.push(key);
+                }
+            }
+        });
+
+        return {
+            type: 'object',
+            description: 'bpwa json schema',
+            properties,
+            required,
+            dependence
+        };
     }
 
 };
