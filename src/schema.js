@@ -64,6 +64,10 @@ export default {
                     description: item.description
                 };
 
+                if (item.regExp) {
+                    properties[key].pattern = item.regExp;
+                }
+
                 if (item.required) {
                     required.push(key);
                 }
