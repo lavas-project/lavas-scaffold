@@ -101,6 +101,7 @@ function renderTemplate(fields, ltd, template, isStream) {
 
                         Object.keys(extDataTpls).forEach(key => {
                             extData[key] = etplCompile.compile('' + extDataTpls[key])(fields);
+                            extData.year = (new Date()).getFullYear();
                         });
                         const renderData = Object.assign({}, fields, extData);
 
@@ -156,18 +157,30 @@ export default {
 
         let data = await gData();
         let fwobj;
+        let tobj;
 
         // 这里说明一下， 没办法做到完全解耦， 必须传入 fields.framework 字段，也就是必须得指定一个 framework
         // 在 GLOBAL_CONF_URL 对应的必须得有 framework 这个 property，否则 run 不起来
-        for (let framework of data.templates) {
-            if (framework.value === data.defaultFramework || framework.value === fields.framework) {
+        for (let framework of data.frameworks) {
+            if (framework.value === fields.framework || framework.value === data.defaults.framework) {
                 fwobj = framework;
             }
         }
 
-        const gitRepo = fwobj.git;
+        for (let template of fwobj.subList.template) {
+            if (template.valye === fields.template || template.value === data.defaults.template) {
+                tobj = template;
+            }
+        }
+
+        const gitRepo = tobj.git;
         const ltd = path.resolve(conf.LOCAL_TEMPLATES_DIR, `${Date.now()}`);
-        const tltd = path.resolve(conf.LOCAL_TEMPLATES_DIR, fields.framework || data.defaultFramework, 'templates');
+        const tltd = path.resolve(
+            conf.LOCAL_TEMPLATES_DIR,
+            fields.framework || data.defaults.framework,
+            fields.template || data.defaults.template,
+            'templates'
+        );
 
         try {
             if (fs.existsSync(ltd)) {
@@ -179,7 +192,7 @@ export default {
             fs.copySync(tltd, ltd);
 
             // 把指定的文件和文件夹都删掉
-            (fwobj.exportsIgnores || [
+            (tobj.exportsIgnores || [
                 '.git',
                 'docs'
             ]).forEach(fileOrDir => {
@@ -189,10 +202,10 @@ export default {
                 }
             });
 
-            fields.framework = fields.framework || data.defaultFramework;
-            fields.appShell = fields.appShell || data.defaultAppShell;
 
-            const renderResult = await renderTemplate(fields, ltd, fwobj, isStream);
+            fields = Object.assign({}, fields, data.defaults);
+
+            const renderResult = await renderTemplate(fields, ltd, tobj, isStream);
             fs.removeSync(ltd);
 
             return renderResult;

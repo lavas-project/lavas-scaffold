@@ -18,14 +18,7 @@ export default {
     getSchema: async function () {
 
         let data = await gData();
-        let schemas = data.schemas;
-        let properties = {};
-
-        Object.keys(schemas).forEach(key => {
-            if (!schemas[key].disable) {
-                properties[key] = schemas[key];
-            }
-        });
+        let properties = data.schemas;
 
         const keys = Object.keys(properties);
 
@@ -33,9 +26,16 @@ export default {
             const item = properties[key];
 
             if (item.type === 'list') {
-
                 if (item.link && !item.dependence) {
                     properties[key].list = data[item.link];
+                }
+                else if (item.dependence) {
+                    const depList = properties[item.dependence].list;
+                    depList.forEach(depItem => {
+                        if (depItem.value === data.defaults[item.dependence]) {
+                            properties[key].list = depItem.subList ? (depItem.subList[key] || []) : [];
+                        }
+                    });
                 }
             }
         }
