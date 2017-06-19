@@ -1,14 +1,14 @@
 /**
- * @file bpwa 入口
+ * @file lava-scaffold 入口
  * @author mj(zoumiaojiang@gmail.com)
  */
 
 
 import path from 'path';
 
-import bpwaSchema from './src/schema';
-import bpwaProject from './src/project';
-import bpwaTemplate from './src/template';
+import lavasScaffoldSchema from './src/schema';
+import lavasScaffoldProject from './src/project';
+import lavasScaffoldTemplate from './src/template';
 
 
 /**
@@ -18,7 +18,7 @@ import bpwaTemplate from './src/template';
  * @return {Object}         输出的 fields
  */
 async function getFields(fields) {
-    const schema = await bpwaSchema.getSchema();
+    const schema = await lavasScaffoldSchema.getSchema();
     const defaultFields = {};
 
     Object.keys(schema.properties).forEach(key => {
@@ -46,7 +46,7 @@ export default {
      */
     exportProject: async function (fields, isStream) {
         fields = await getFields(fields);
-        const {err, ret} = await bpwaProject.exports(fields, isStream);
+        const {err, ret} = await lavasScaffoldProject.exports(fields, isStream);
 
         if (err) {
             return err;
@@ -62,7 +62,7 @@ export default {
      * @return {Promise} resolve schema
      */
     getSchema: async function () {
-        let schema = await bpwaSchema.getSchema();
+        let schema = await lavasScaffoldSchema.getSchema();
         return schema;
     },
 
@@ -73,7 +73,7 @@ export default {
      * @return {Promise} resolve frameworks
      */
     getTemplates: async function () {
-        let templates = await bpwaTemplate.getTemplates();
+        let templates = await lavasScaffoldTemplate.getTemplates();
         return templates;
     }
 

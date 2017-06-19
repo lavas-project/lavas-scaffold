@@ -4,8 +4,8 @@
  */
 
 
-import bpwaSchema from './schema';
-import bpwaTemplate from './template';
+import lavasScaffoldSchema from './schema';
+import lavasScaffoldTemplate from './template';
 import log from './log';
 import Ajv from 'ajv';
 
@@ -17,7 +17,7 @@ import Ajv from 'ajv';
  * @return {any}           验证结果
  */
 async function validate(fields) {
-    let jsonSchema = await bpwaSchema.getJsonSchema();
+    let jsonSchema = await lavasScaffoldSchema.getJsonSchema();
 
     let ajv = new Ajv({allErrors: true});
     let validate = ajv.compile(jsonSchema);
@@ -48,7 +48,7 @@ export default {
         const err = await validate(fields);
         let ret = null;
         if (!err) {
-            ret = await bpwaTemplate.exportsTemplate(fields, isStream);
+            ret = await lavasScaffoldTemplate.exportsTemplate(fields, isStream);
         }
 
         return {err, ret};

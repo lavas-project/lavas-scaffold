@@ -1,5 +1,5 @@
 /**
- * @file bpwa 相关配置
+ * @file lavas Scaffold 相关配置
  * @author mj(zoumiaojiang@gmail.com)
  */
 
@@ -31,5 +31,5 @@ export default {
      *
      * @type {String}
      */
-    GLOBAL_CONF_URL: 'https://bos.nj.bpc.baidu.com/mms-res/pwa/config.json'
+    GLOBAL_CONF_URL: 'https://bos.nj.bpc.baidu.com/mms-res/lavas-scaffold/config.json'
 };

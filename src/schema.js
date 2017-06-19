@@ -72,7 +72,7 @@ export default {
 
         return {
             type: 'object',
-            description: 'bpwa json schema',
+            description: 'lavas scaffold json schema',
             properties,
             required,
             dependence

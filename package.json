@@ -1,7 +1,7 @@
 {
-  "name": "bpwa",
-  "version": "1.1.9",
-  "description": "pwa project solution",
+  "name": "lavas-scaffold",
+  "version": "1.0.0",
+  "description": "a pwa project scaffold solution",
   "main": "dist/index.js",
   "scripts": {
     "pretest": "npm run fixtures:ensure",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/searchfe/bpwa.git"
+    "url": "https://github.com/searchfe/lavas-scaffold.git"
   },
   "keywords": [
     "pwa",

@@ -1,5 +1,5 @@
 /**
- * @file bpwa 工具包
+ * @file lavas scaffold 工具包
  * @author mj(zoumiaojiang@gmail.com)
  */
 
