@@ -31,5 +31,11 @@ export default {
      *
      * @type {String}
      */
-    GLOBAL_CONF_URL: 'https://bos.nj.bpc.baidu.com/mms-res/lavas-scaffold/config.json'
+    GLOBAL_CONF_URL: 'https://bos.nj.bpc.baidu.com/mms-res/lavas-scaffold/config.json',
+
+
+    COMMON_DATA: {
+        year: (new Date()).getFullYear(),
+        time: Date.now()
+    }
 };

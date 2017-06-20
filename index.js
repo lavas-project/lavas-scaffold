@@ -9,6 +9,7 @@ import path from 'path';
 import lavasScaffoldSchema from './src/schema';
 import lavasScaffoldProject from './src/project';
 import lavasScaffoldTemplate from './src/template';
+import utils from './src/utils';
 
 
 /**
@@ -45,6 +46,15 @@ export default {
      * @return {Promise}       resolve 工程所在路径/工程的 zip buffer
      */
     exportProject: async function (fields, isStream) {
+
+
+        if (!utils.hasCommand('git')) {
+            return {
+                code: 'no command',
+                message: '当前环境不能使用 git 命令'
+            };
+        }
+
         fields = await getFields(fields);
         const {err, ret} = await lavasScaffoldProject.exports(fields, isStream);
 

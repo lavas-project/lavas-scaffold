@@ -98,12 +98,12 @@ function renderTemplate(fields, ltd, template, isStream) {
                         // 这里可以直接通过外界配置的规则，重新计算出一份数据，只要和 template 里面的字段对应上就好了。
                         const extDataTpls = template.extData || {};
                         const extData = {};
+                        const commonData = conf.COMMON_DATA;
 
                         Object.keys(extDataTpls).forEach(key => {
                             extData[key] = etplCompile.compile('' + extDataTpls[key])(fields);
-                            extData.year = (new Date()).getFullYear();
                         });
-                        const renderData = Object.assign({}, fields, extData);
+                        const renderData = Object.assign({}, fields, extData, commonData);
 
                         const afterCon = etplCompile.compile(fileCon)(renderData);
                         fs.writeFileSync(filePath, afterCon);
@@ -166,9 +166,8 @@ export default {
                 fwobj = framework;
             }
         }
-
         for (let template of fwobj.subList.template) {
-            if (template.valye === fields.template || template.value === data.defaults.template) {
+            if (template.value === fields.template || template.value === data.defaults.template) {
                 tobj = template;
             }
         }

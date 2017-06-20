@@ -1,6 +1,6 @@
 {
   "name": "lavas-scaffold",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "a pwa project scaffold solution",
   "main": "dist/index.js",
   "scripts": {
@@ -36,6 +36,7 @@
     "glob": "^7.1.2",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
+    "shelljs": "^0.7.8",
     "simple-git": "^1.73.0"
   },
   "devDependencies": {
