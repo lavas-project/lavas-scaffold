@@ -11,7 +11,7 @@
     "lint": "fecs --ignore=./.gitignore bin src test",
     "build": "cross-env BABEL_ENV=production rollup -c",
     "prepublish": "npm run build",
-    "fixtures:ensure": "cross-env NODE_ENV=development babel-node ./test/helpers/setupBpwa.js",
+    "fixtures:ensure": "cross-env NODE_ENV=development babel-node ./test/helpers/setupLavas.js",
     "fixtures:rebuild": "cross-env NODE_ENV=development babel-node ./test/helpers/cleanupFixtures.js && npm run fixtures:ensure"
   },
   "repository": {

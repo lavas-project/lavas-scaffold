@@ -4,16 +4,16 @@
  */
 
 
-import bpwa from '../../index';
+import lavas from '../../index';
 import path from 'path';
 
 
-async function setupBpwa() {
-    // const schema = await bpwa.getSchema();
+async function setupLavas() {
+    // const schema = await lavas.getSchema();
 
     // console.log(schema.properties);
     // console.log('start time: ', Date.now());
-    const ret = await bpwa.exportProject({
+    const ret = await lavas.exportProject({
         name: 'xxxx',
         dirPath: path.resolve(__dirname, '..', '..', '..'),
         author: 'zoumiaojiang',
@@ -25,5 +25,5 @@ async function setupBpwa() {
 
 
 
-setupBpwa();
+setupLavas();
 
