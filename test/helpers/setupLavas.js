@@ -15,7 +15,6 @@ async function setupLavas() {
     // console.log('start time: ', Date.now());
     const ret = await lavas.exportProject({
         name: 'xxxx',
-        dirPath: path.resolve(__dirname, '..', '..', '..'),
         author: 'zoumiaojiang',
         email: 'zoumiaojiang@gmail.com'
     }, true);

@@ -68,7 +68,7 @@ function downloadFromGit(repo, targetPath) {
  */
 function renderTemplate(fields, ltd, template, isStream) {
 
-    const dirPath = fields.dirPath;
+    const dirPath = fields.dirPath || process.cwd();
 
     let etplCompile = new etpl.Engine(template.etpl || {
         commandOpen: '{%',
