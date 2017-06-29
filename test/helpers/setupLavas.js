@@ -3,8 +3,8 @@
  * @author mj(zoumiaojiang@gmail.com)
  */
 
-import lavas from '../../index';
-import path from 'path';
+const lavas = require('../../index');
+// const path = require('path');
 
 async function setupLavas() {
     // const schema = await lavas.getSchema();
