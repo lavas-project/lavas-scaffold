@@ -1,7 +1,7 @@
 {
   "name": "lavas-scaffold",
-  "version": "1.0.4",
-  "description": "a pwa project scaffold solution",
+  "version": "1.0.5",
+  "description": "PWA project scaffold solution",
   "main": "index.js",
   "scripts": {
     "pretest": "npm run fixtures:ensure",
@@ -15,11 +15,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/searchfe/lavas-scaffold.git"
+    "url": "https://github.com/lavas-project/lavas-scaffold.git"
   },
   "keywords": [
     "pwa",
-    "vue"
+    "vue",
+    "lavas",
+    "scaffold"
   ],
   "author": "sfe-sy<sfe-sy@baidu.com>",
   "license": "ISC",
