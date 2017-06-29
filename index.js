@@ -6,10 +6,10 @@
 
 import path from 'path';
 
-import lavasScaffoldSchema from './src/schema';
-import lavasScaffoldProject from './src/project';
-import lavasScaffoldTemplate from './src/template';
-import utils from './src/utils';
+import lavasScaffoldSchema from './lib/schema';
+import lavasScaffoldProject from './lib/project';
+import lavasScaffoldTemplate from './lib/template';
+import utils from './lib/utils';
 
 
 /**
@@ -19,15 +19,15 @@ import utils from './src/utils';
  * @return {Object}         输出的 fields
  */
 async function getFields(fields) {
-    const schema = await lavasScaffoldSchema.getSchema();
-    const defaultFields = {};
+
+    let schema = await lavasScaffoldSchema.getSchema();
+    let defaultFields = {};
 
     Object.keys(schema.properties).forEach(key => {
         defaultFields[key] = schema.properties[key].default;
     });
 
     fields = Object.assign({}, defaultFields, fields);
-
     fields.name = fields.name || 'pwa-project';
     fields.dirPath = path.resolve(process.cwd(), fields.dirPath || '', fields.name);
 
@@ -38,6 +38,7 @@ async function getFields(fields) {
 /* eslint-disable fecs-use-method-definition */
 export default {
 
+
     /**
      * 导出 pwa 脚手架工程
      *
@@ -47,7 +48,6 @@ export default {
      */
     exportProject: async function (fields, isStream) {
 
-
         if (!utils.hasCommand('git')) {
             return {
                 code: 'no command',
@@ -56,7 +56,8 @@ export default {
         }
 
         fields = await getFields(fields);
-        const {err, ret} = await lavasScaffoldProject.exports(fields, isStream);
+
+        let {err, ret} = await lavasScaffoldProject.exports(fields, isStream);
 
         if (err) {
             return err;
@@ -72,7 +73,9 @@ export default {
      * @return {Promise} resolve schema
      */
     getSchema: async function () {
+
         let schema = await lavasScaffoldSchema.getSchema();
+
         return schema;
     },
 
@@ -83,8 +86,9 @@ export default {
      * @return {Promise} resolve frameworks
      */
     getTemplates: async function () {
+
         let templates = await lavasScaffoldTemplate.getTemplates();
+
         return templates;
     }
-
 };
