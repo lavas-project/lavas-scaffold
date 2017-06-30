@@ -6,7 +6,7 @@
 const lavas = require('../../index');
 // const path = require('path');
 
-async function setupLavas() {
+const setupLavas = async function () {
     // const schema = await lavas.getSchema();
 
     // console.log(schema.properties);
@@ -18,7 +18,7 @@ async function setupLavas() {
     }, true);
 
     console.log(ret);
-}
+};
 
 
 

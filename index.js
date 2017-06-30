@@ -4,12 +4,12 @@
  */
 
 
-import path from 'path';
+const path = require('path');
 
-import lavasScaffoldSchema from './lib/schema';
-import lavasScaffoldProject from './lib/project';
-import lavasScaffoldTemplate from './lib/template';
-import utils from './lib/utils';
+const lavasScaffoldSchema = require('./lib/schema');
+const lavasScaffoldProject = require('./lib/project');
+const lavasScaffoldTemplate = require('./lib/template');
+const utils = require('./lib/utils');
 
 
 /**
@@ -18,7 +18,7 @@ import utils from './lib/utils';
  * @param  {Object} fields  传入的 fields
  * @return {Object}         输出的 fields
  */
-async function getFields(fields) {
+let getFields = async function (fields) {
 
     let schema = await lavasScaffoldSchema.getSchema();
     let defaultFields = {};
@@ -32,11 +32,11 @@ async function getFields(fields) {
     fields.dirPath = path.resolve(process.cwd(), fields.dirPath || '', fields.name);
 
     return fields;
-}
+};
 
 
 /* eslint-disable fecs-use-method-definition */
-export default {
+module.exports = {
 
 
     /**
