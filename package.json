@@ -8,7 +8,7 @@
     "test": "cross-env FORCE_COLOR=1 jest --coverage",
     "test:watch": "jest --watch",
     "posttest": "npm run lint",
-    "lint": "fecs --ignore=./.gitignore bin src test",
+    "lint": "fecs --ignore=./.gitignore bin lib test --rule",
     "build": "sh build.sh",
     "fixtures:ensure": "cross-env NODE_ENV=development babel-node ./test/helpers/setupLavas.js",
     "fixtures:rebuild": "cross-env NODE_ENV=development babel-node ./test/helpers/cleanupFixtures.js && npm run fixtures:ensure"
