@@ -2,8 +2,10 @@
 ._.DS_Store
 node_modules
 *.log
+*.log.*
 *.tmp
 *.swp
 .idea
 tmp
 coverage
+.nyc_output

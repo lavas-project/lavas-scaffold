@@ -4,13 +4,12 @@
   "description": "PWA project scaffold solution",
   "main": "index.js",
   "scripts": {
-    "pretest": "npm run fixtures:ensure",
-    "test": "cross-env FORCE_COLOR=1 jest --coverage",
+    "pretest": "npm run fixtures:rebuild && npm run lint",
+    "test": "nyc ava",
     "test:watch": "jest --watch",
-    "posttest": "npm run lint",
     "lint": "fecs --ignore=./.gitignore bin lib test --rule",
     "build": "sh build.sh",
-    "fixtures:ensure": "cross-env NODE_ENV=development babel-node ./test/helpers/setupLavas.js",
+    "fixtures:ensure": "cross-env NODE_ENV=development babel-node ./test/helpers/setupFixtures.js",
     "fixtures:rebuild": "cross-env NODE_ENV=development babel-node ./test/helpers/cleanupFixtures.js && npm run fixtures:ensure"
   },
   "repository": {
@@ -29,6 +28,16 @@
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"
   },
+  "ava": {
+    "concurrency": 5,
+    "failFast": true,
+    "files": [
+      "test/**/*.test.js"
+    ],
+    "require": [
+      "babel-register"
+    ]
+  },
   "dependencies": {
     "ajv": "^5.1.3",
     "archiver": "^1.3.0",
@@ -43,11 +52,16 @@
     "simple-git": "^1.73.0"
   },
   "devDependencies": {
+    "ava": "^0.18.2",
     "babel-cli": "^6.24.0",
     "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.3.2",
+    "babel-register": "^6.23.0",
     "cross-env": "^4.0.0",
     "fecs": "^1.3.1",
-    "jest": "^19.0.2"
+    "jest": "^19.0.2",
+    "nyc": "^10.3.2",
+    "sinon": "^2.4.1"
   }
 }
