@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "pretest": "npm run fixtures:rebuild && npm run lint",
-    "test": "nyc ava",
+    "test": "npm run build && nyc ava",
     "test:watch": "jest --watch",
     "lint": "fecs --ignore=./.gitignore bin lib test --rule",
     "build": "sh build.sh",
