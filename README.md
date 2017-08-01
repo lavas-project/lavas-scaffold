@@ -1,5 +1,11 @@
 # lavas-scaffold
 
+[![npm version](https://badge.fury.io/js/lavas-scaffold.svg)](https://badge.fury.io/js/lavas-scaffold)
+[![npm download](https://img.shields.io/npm/dm/lavas-scaffold.svg)](https://npmjs.org/lavas-scaffold)
+[![Build Status](https://travis-ci.org/lavas-project/lavas-scaffold.svg?branch=master)](https://travis-ci.org/lavas-project/lavas-scaffold)
+
+[![NPM](https://nodei.co/npm/lavas-scaffold.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/lavas-scaffold/)
+
 > Lavas 工程化解决方案脚手架解决方案
 
 ### 安装
