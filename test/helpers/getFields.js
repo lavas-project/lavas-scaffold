@@ -3,7 +3,7 @@
  * @author mj(zoumiaojiang@gmail.com)
  */
 
-const lavasScaffoldSchema = require('../../lib/schema');
+const lavasScaffoldSchema = require('../../dist/lib/schema');
 
 function questionInput(key, schema, params) {
     let con = schema.properties[key];

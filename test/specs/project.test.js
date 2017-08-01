@@ -6,8 +6,8 @@
 /* eslint-disable fecs-prefer-async-await */
 const test = require('ava');
 
-const project = require('../../lib/project');
-const lavasScaffoldSchema = require('../../lib/schema');
+const project = require('../../dist/lib/project');
+const lavasScaffoldSchema = require('../../dist/lib/schema');
 const getFields = require('../helpers/getFields');
 const Ajv = require('ajv');
 

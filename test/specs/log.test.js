@@ -4,7 +4,7 @@
  */
 const test = require('ava');
 
-const log = require('../../lib/log');
+const log = require('../../dist/lib/log');
 
 test('it should be ok', t => {
 

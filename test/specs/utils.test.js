@@ -4,7 +4,7 @@
  */
 
 const test = require('ava');
-const utils = require('../../lib/utils');
+const utils = require('../../dist/lib/utils');
 const fs = require('fs-extra');
 const os = require('os');
 
