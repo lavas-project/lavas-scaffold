@@ -7,13 +7,28 @@ const lavas = require('../../index');
 
 const setupLavas = async function () {
 
-    let streamRet = await lavas.exportProject({
-        name: 'test-project',
-        author: 'someone',
-        email: 'someone@somecompany.com'
-    }, true);
+    let metaSchema = await lavas.getMetaSchema();
 
-    console.log(streamRet);
+    console.log(metaSchema);
+
+    let params = {
+        template: 'Basic'
+    };
+
+    let templateConf = await lavas.downloadTemplate(params);
+
+    console.log(templateConf);
+
+    let params1 = {
+        name: 'test-project',
+        author: 'someonexxx',
+        email: 'someone@xxx.com',
+        isStream: true
+    };
+
+    let streamDir = await lavas.renderTemplate(params1, templateConf);
+
+    console.log(streamDir);
 };
 
 setupLavas();
