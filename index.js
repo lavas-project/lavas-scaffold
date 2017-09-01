@@ -1,5 +1,5 @@
 /**
- * @file lava-scaffold 入口
+ * @file lavas scaffold entry
  * @author mj(zoumiaojiang@gmail.com)
  */
 
@@ -9,70 +9,81 @@ const _ = require('lodash');
 
 const lavasSchema = require('./lib/schema');
 const lavasTemplate = require('./lib/template');
+const store = require('./lib/store');
 
 /**
  * 获取导出的所有的 fields （包含 default 参数）
  *
  * @param  {Object} fields  传入的 fields
- * @param  {Obejct} conf    模版的配置
+ * @param  {Obejct} templateConf    模版的配置
  * @return {Object}         输出的 fields
  */
-async function extendsDefaultFields(fields = {}, conf = {}) {
-
-    let schema = await lavasSchema.getSchema(conf);
+async function extendsDefaultFields(fields = {}, templateConf = {}) {
     let defaultFields = {};
+    let schema = store.get('schema') || await lavasSchema.getSchema(templateConf);
 
-    Object.keys(schema).forEach(key => {
-        defaultFields[key] = schema[key].default;
-    });
+    Object.keys(schema).forEach(key => (defaultFields[key] = schema[key].default));
 
-    fields = _.merge({}, defaultFields, fields);
-    fields.name = fields.name || 'lavas-pwa';
-    fields.dirPath = path.resolve(process.cwd(), fields.dirPath || '', fields.name);
+    /* eslint-disable fecs-use-computed-property */
+    defaultFields.name = fields.name || 'lavas-pwa';
+    defaultFields.dirPath = path.resolve(process.cwd(), fields.dirPath || '', defaultFields.name);
 
-    return fields;
+    return _.merge({}, defaultFields, fields);
 }
 
 /**
- * 获取元 schema (涉及模版下载的 schema)
+ * 获取元 Schema - 涉及模版下载的 Schema
  *
  * @return {Promise<*>}   Meta Schema
  */
 exports.getMetaSchema = async function () {
-    return await lavasSchema.getMetaSchema();
+    let metaSchema = store.get('metaSchema');
+
+    if (!metaSchema) {
+        metaSchema = await lavasSchema.getMetaSchema();
+    }
+    return metaSchema;
 };
 
 /**
- * 获取 schema (涉及模版渲染的 schema)
+ * 获取 Schema - 涉及模版渲染的 Schema
  *
- * @param {Object} conf 模版自己的配置
+ * @param {Object} templateConf 模版自己的配置
  * @return {Promise<*>}   Schema
  */
-exports.getSchema = async function (conf = {}) {
-    return await lavasSchema.getSchema(conf);
+exports.getSchema = async function (templateConf = {}) {
+    let schema = store.get('schema');
+    if (!schema) {
+        schema = await lavasSchema.getSchema(templateConf);
+    }
+    return schema;
 };
 
 /**
- * 下载模版
+ * 通过指定的 meta 参数下载模版，下载成功后返回模板的 Schema 信息
  *
  * @param {Object} params 导出参数
  * @return {*} 下载的临时路径 或者 报错对象
  */
-exports.downloadTemplate = async function (params = {}) {
+exports.download = async function (params = {}) {
     params = await extendsDefaultFields(params);
 
     return await lavasTemplate.download(params);
 };
 
 /**
- * 渲染工程
+ * 通过指定的参数渲染下载成功的模板
  *
  * @param {Object} params 导出参数
- * @param {Object} conf 模版的配置
+ * @param {Object} templateConf 模版的配置
  * @return {Promise<*>}   导出的结果
  */
-exports.renderTemplate = async function (params = {}, conf = {}) {
-    params = await extendsDefaultFields(params, conf);
-
+exports.render = async function (params = {}, templateConf = {}) {
+    params = await extendsDefaultFields(params, templateConf);
     return await lavasTemplate.render(params);
 };
+
+
+if (process.env.NODE_ENV === 'development') {
+    console.log('you are in development');
+}

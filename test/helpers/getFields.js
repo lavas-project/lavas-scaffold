@@ -4,9 +4,10 @@
  */
 
 const lavasScaffoldSchema = require('../../dist/lib/schema');
+const lavas = require('../../dist');
 
 function questionInput(key, schema, params) {
-    let con = schema.properties[key];
+    let con = schema[key];
 
     return {
         [key]: con.default
@@ -14,7 +15,7 @@ function questionInput(key, schema, params) {
 }
 
 function questionYesOrNo(key, schema, params) {
-    let con = schema.properties[key];
+    let con = schema[key];
 
     return {
         [key]: con.default
@@ -23,7 +24,7 @@ function questionYesOrNo(key, schema, params) {
 
 
 function questionList(key, schema, params) {
-    let con = schema.properties[key];
+    let con = schema[key];
     let sourceList = [];
     let choiceList = [];
 
@@ -35,8 +36,8 @@ function questionList(key, schema, params) {
         // 表示是级联的操作
         let dependence = con.dependence;
         let ref = con.ref;
-        let depList = schema.properties[dependence].list;
-        let depValue = params[dependence] || schema.properties[dependence].list[0].value;
+        let depList = schema[dependence].list;
+        let depValue = params[dependence] || schema[dependence].list[0].value;
 
         depList.forEach(depItem => {
             if (depItem.value === depValue) {
@@ -60,11 +61,14 @@ function questionList(key, schema, params) {
 
 
 module.exports = async function () {
-    let schema = await lavasScaffoldSchema.getSchema();
+    let metaSchema = await lavasScaffoldSchema.getMetaSchema();
+    let templateConfig = await lavas.download({}, metaSchema);
+    let schema = await lavasScaffoldSchema.getSchema(templateConfig);
+
     let params = {};
 
-    for (let key of Object.keys(schema.properties)) {
-        let con = schema.properties[key];
+    for (let key of Object.keys(schema)) {
+        let con = schema[key];
         let type = con.type;
         let data = {};
 
