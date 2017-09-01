@@ -4,12 +4,11 @@
   "description": "PWA project scaffold solution",
   "main": "index.js",
   "scripts": {
-    "pretest": "npm run fixtures:clear && npm run lint",
-    "test": "npm run build && nyc ava",
-    "test:watch": "jest --watch",
+    "pretest": "cross-env NODE_ENV=development npm run fixtures:clear && npm run lint",
+    "test": "npm run build && cross-env NODE_ENV=development nyc ava",
     "lint": "fecs --ignore=./.gitignore bin lib test --rule",
     "build": "sh build.sh",
-    "dev": "npm run fixtures:rebuild",
+    "dev": "cross-env NODE_ENV=development npm run fixtures:rebuild",
     "fixtures:ensure": "cross-env NODE_ENV=development babel-node ./test/helpers/setupFixtures.js",
     "fixtures:clear": "cross-env NODE_ENV=development babel-node ./test/helpers/cleanupFixtures.js",
     "fixtures:rebuild": "npm run fixtures:clear && npm run fixtures:ensure"

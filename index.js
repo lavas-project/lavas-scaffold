@@ -37,12 +37,7 @@ async function extendsDefaultFields(fields = {}, templateConf = {}) {
  * @return {Promise<*>}   Meta Schema
  */
 exports.getMetaSchema = async function () {
-    let metaSchema = store.get('metaSchema');
-
-    if (!metaSchema) {
-        metaSchema = await lavasSchema.getMetaSchema();
-    }
-    return metaSchema;
+    return store.get('metaSchema') || await lavasSchema.getMetaSchema();
 };
 
 /**
@@ -52,23 +47,19 @@ exports.getMetaSchema = async function () {
  * @return {Promise<*>}   Schema
  */
 exports.getSchema = async function (templateConf = {}) {
-    let schema = store.get('schema');
-    if (!schema) {
-        schema = await lavasSchema.getSchema(templateConf);
-    }
-    return schema;
+    return store.get('schema') || await lavasSchema.getSchema(templateConf);
 };
 
 /**
  * 通过指定的 meta 参数下载模版，下载成功后返回模板的 Schema 信息
  *
- * @param {Object} params 导出参数
+ * @param {Object} metaParams 导出参数
  * @return {*} 下载的临时路径 或者 报错对象
  */
-exports.download = async function (params = {}) {
-    params = await extendsDefaultFields(params);
+exports.download = async function (metaParams = {}) {
+    metaParams = await extendsDefaultFields(metaParams);
 
-    return await lavasTemplate.download(params);
+    return await lavasTemplate.download(metaParams);
 };
 
 /**
@@ -78,12 +69,16 @@ exports.download = async function (params = {}) {
  * @param {Object} templateConf 模版的配置
  * @return {Promise<*>}   导出的结果
  */
-exports.render = async function (params = {}, templateConf = {}) {
+exports.render = async function (params = {}, templateConf) {
+
+    if (!templateConf) {
+        throw new Error('必须指定一个模板渲染，且给出该模板的 Schema');
+    }
+
     params = await extendsDefaultFields(params, templateConf);
     return await lavasTemplate.render(params);
 };
 
-
 if (process.env.NODE_ENV === 'development') {
-    console.log('you are in development');
+    console.log('Woow! You are in development!!!');
 }
