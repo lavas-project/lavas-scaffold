@@ -3,8 +3,8 @@
  * @author mj(zoumiaojiang@gmail.com)
  */
 
-const lavasScaffoldSchema = require('../../dist/lib/schema');
-const lavas = require('../../dist');
+// const lavasScaffoldSchema = require('../../dist/lib/schema');
+// const lavas = require('../../dist');
 
 function questionInput(key, schema, params) {
     let con = schema[key];
@@ -60,10 +60,10 @@ function questionList(key, schema, params) {
 }
 
 
-module.exports = async function () {
-    let metaSchema = await lavasScaffoldSchema.getMetaSchema();
-    let templateConfig = await lavas.download({}, metaSchema);
-    let schema = await lavasScaffoldSchema.getSchema(templateConfig);
+module.exports = async function (schema) {
+    // let metaSchema = await lavasScaffoldSchema.getMetaSchema();
+    // let templateConfig = await lavas.download({}, metaSchema);
+    // let schema = await lavasScaffoldSchema.getSchema(templateConfig);
 
     let params = {};
 

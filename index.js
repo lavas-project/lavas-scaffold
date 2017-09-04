@@ -51,7 +51,7 @@ exports.getSchema = async function (templateConf = {}) {
         // 如果实在没有提前下载模板，就现用默认的参数下载一个
         templateConf = await lavasTemplate.download();
     }
-    return store.get('schema') || await lavasSchema.getSchema(templateConf);
+    return lavasSchema.getSchema(templateConf);
 };
 
 /**

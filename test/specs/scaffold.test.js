@@ -26,7 +26,7 @@ test.before('get JSON Schema and download template & render template', async t =
     // 下载一次 test
     tData = await lavas.download({
         framework: 'vue',
-        template: 'Basic'
+        template: 'lavasTemplate'
     }, metaSchema);
 
     // 通过下载的模板的配置信息获取渲染模板 Schema
@@ -34,10 +34,13 @@ test.before('get JSON Schema and download template & render template', async t =
 });
 
 
-test('it should be get right schema', async t => {
+test('it should be get right schema', t => {
+
     let hasProperties = !!schema
         && (typeof schema === 'object')
-        && schema.hasOwnProperty('framework');
+        && JSON.stringify(schema) !== '{}'
+        && !schema.hasOwnProperty('framework')
+    ;
     t.true(hasProperties);
 });
 
@@ -55,10 +58,8 @@ test('it should be init project to readFileStream success', async t => {
 
 test('it should be init project to readFileStream success too', async t => {
     // 直接渲染到本地文件系统的 test
-    store.set('schema', undefined);
     store.set('metaSchema', undefined);
     store.set('metaJsonSchema', undefined);
-    store.set('jsonSchema', undefined);
 
     // 通过获取的 Schema mock 参数
     let fields = await getFields(schema);
