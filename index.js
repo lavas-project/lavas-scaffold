@@ -47,6 +47,10 @@ exports.getMetaSchema = async function () {
  * @return {Promise<*>}   Schema
  */
 exports.getSchema = async function (templateConf = {}) {
+    if (!templateConf) {
+        // 如果实在没有提前下载模板，就现用默认的参数下载一个
+        templateConf = await lavasTemplate.download();
+    }
     return store.get('schema') || await lavasSchema.getSchema(templateConf);
 };
 
@@ -72,7 +76,8 @@ exports.download = async function (metaParams = {}) {
 exports.render = async function (params = {}, templateConf) {
 
     if (!templateConf) {
-        throw new Error('必须指定一个模板渲染，且给出该模板的 Schema');
+        // 如果实在没有提前下载模板，就现用默认的参数下载一个（这个模板是默认的）
+        templateConf = await lavasTemplate.download();
     }
 
     params = await extendsDefaultFields(params, templateConf);
