@@ -4,19 +4,22 @@
     "description": "*__desc__*",
     "author": "*__name__*<*__email__*>",
     "scripts": {
-        "dev": "lavas dev",
-        "start": "lavas start",
-        "generate": "lavas generate",
+        "dev": "cross-env NODE_ENV=development lavas dev",
         "build": "lavas build"
     },
+    "lavas": true,
     "keywords": [
-      "pwa",
-      "vue",
-      "lavas"
+        "pwa",
+        "vue",
+        "lavas"
     ],
     "license": "MIT",
+    "dependencies": {
+
+    },
     "devDependencies": {
+        "cross-env": "^5.0.5",
         "lavas-cli": "^2.0.0",
-        "lavas-core": "latest"
+        "*__lavasCoreName__*": "latest"
     }
-  }
+}
