@@ -1,5 +1,5 @@
 {
-    "name": "*__name__",
+    "name": "*__name__*",
     "version": "1.0.0",
     "description": "*__desc__*",
     "author": "*__name__*<*__email__*>",
