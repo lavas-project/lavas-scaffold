@@ -1,0 +1,21 @@
+{
+    "name": "*__name__",
+    "version": "1.0.0",
+    "description": "*__desc__*",
+    "author": "*__name__*<*__email__*>",
+    "scripts": {
+        "dev": "lavas dev",
+        "start": "lavas start",
+        "generate": "lavas generate",
+        "build": "lavas build"
+    },
+    "keywords": [
+      "pwa",
+      "vue",
+      "lavas"
+    ],
+    "license": "MIT",
+    "devDependencies": {
+        "lavas": "^2.0.0"
+    }
+  }
