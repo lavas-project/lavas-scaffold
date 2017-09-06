@@ -16,6 +16,7 @@
     ],
     "license": "MIT",
     "devDependencies": {
-        "lavas": "^2.0.0"
+        "lavas-cli": "^2.0.0",
+        "lavas-core": "latest"
     }
   }
